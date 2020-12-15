@@ -7,9 +7,14 @@
 
         <div class="row">
             <div class="col-md-12">
-                <div class="text-right mb-3">
+                <div class="text-right mb-3  d-flex justify-content-between">
+                    <div>
+                        <a class="btn btn-success text-light">View Attendance</a>
+                        <button class="btn btn-warning" style="border-color: black;" data-toggle="modal" data-target="#salary-record">View Salary Record</button>
+                    </div>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST">
                         @csrf
+
                     </form>
                     <a href="{{ route('logout') }}" class="btn btn-secondary"
                         onclick="event.preventDefault();
@@ -37,7 +42,7 @@
 
                 <div class="card shadow">
                     <div class="card-header bg-primary text-light">
-                        <h4>Announcements</h4>
+                        <h5>Announcements</h5>
                     </div>
                     <div class="card-body text-center">
                         <div class="row">
@@ -114,11 +119,10 @@
             </div>
         </div>
 
-        
         <div class="row mt-3">
             <div class="col-md-6">
                 <div class="card shadow">
-                    <div class="card-header bg-primary text-light"><h4>Commendations</h4></div>
+                    <div class="card-header bg-primary text-light"><h5>Commendations</h5></div>
                     <div class="card-body">
                         @if ($commend->isEmpty())
                             <div class="text-center">
@@ -142,7 +146,7 @@
 
             <div class="col-md-6">
                 <div class="card shadow">
-                    <div class="card-header bg-primary text-light"><h4>Room for Improvement</h4></div>
+                    <div class="card-header bg-primary text-light"><h5>Room for Improvement</h5></div>
                     <div class="card-body">
                         @if ($rfi->isEmpty())
                             <div class="text-center">
@@ -168,7 +172,7 @@
             <div class="col-lg-12">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-light">
-                        <h4>Overview of Employee Info</h4>
+                        <h5>Overview of Employee Info</h5>
                     </div>
                     <div class="card-body">
                        <div class="row">
@@ -239,6 +243,7 @@
                                 </div>
                             </div>
                        </div>
+
                     </div>
                 </div><br>
             </div>
@@ -249,7 +254,7 @@
             <div class="col-md-6">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-light">
-                        <h4><i class="fas fa-birthday-cake" style="color:pink"></i> Birthday celebrants for {{date('F')}}! &nbsp; </h4>
+                        <h5><i class="fas fa-birthday-cake" style="color:pink"></i> Birthday celebrants for {{date('F')}}! &nbsp; </h5>
                     </div>
                     <div class="card-body">
                         <table class="table table-hover table-bordered table-striped">
@@ -291,7 +296,7 @@
                 <div class="card shadow">
 
                     <div class="card-header bg-primary text-light" >
-                            <h4>  <i class="fas fa-glass-cheers" style="color:yellow"></i> Workversary celebrants for {{date('F')}}!</h4>
+                            <h5>  <i class="fas fa-glass-cheers" style="color:yellow"></i> Workversary celebrants for {{date('F')}}!</h5>
                         </div>
                     <div class="card-body">
                         @if ($upcoming_w == null)
@@ -317,7 +322,7 @@
             <div class="col-md-6">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-light d-flex justify-content-between">
-                        <h4><i class="fas fa-plane-departure"></i>&nbsp; Quick Leave Request</h4>
+                        <h5><i class="fas fa-plane-departure"></i>&nbsp; Quick Leave Request</h5>
                         <button data-toggle="modal" data-target="#leave_request" class="btn btn-secondary btn-sm">Apply Leave</button>
                     </div>
                     <div class="card-body">
@@ -336,21 +341,21 @@
                                     <td>{{$x->type}}</td>
                                     <td>
                                         @if ($x->status == 'PENDING')
-                                            <h4>
+                                            <h5>
                                                 <span class="badge badge-warning text-dark">PENDING</span>
-                                            </h4>
+                                            </h5>
                                         @elseif ($x->status == 'APPROVED')
-                                            <h4>
+                                            <h5>
                                                 <span class="badge badge-success text-light">APPROVED</span>
-                                            </h4>
+                                            </h5>
                                         @elseif( strpos( $x->type , 'Marked as absent'))
-                                            <h4>
+                                            <h5>
                                                 <span class="badge badge-danger text-light">ABSENT</span>
-                                            </h4>
+                                            </h5>
                                         @else
-                                            <h4>
+                                            <h5>
                                                 <span class="badge badge-danger text-light">REJECTED</span>
-                                            </h4>
+                                            </h5>
                                         @endif
                                     </td>
                                 </tr>
@@ -365,7 +370,7 @@
             <div class="col-md-6">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-light d-flex justify-content-between">
-                        <h4><i class="far fa-clock" style="color:darkseagreen"></i>&nbsp;Overtime Record</h4>
+                        <h5><i class="far fa-clock" style="color:darkseagreen"></i>&nbsp;Overtime Record</h5>
                         <button data-toggle="modal" data-target="#overtime_request" class="btn btn-secondary btn-sm">Apply Overtime</button>
                     </div>
                     <div class="card-body">
@@ -386,17 +391,17 @@
                                     <td>{{$x->hours}}</td>
                                     <td>
                                         @if ($x->status == 'PENDING')
-                                            <h4>
+                                            <h5>
                                                 <span class="badge badge-warning text-dark">PENDING</span>
-                                            </h4>
+                                            </h5>
                                         @elseif ($x->status == 'ACCEPTED')
-                                            <h4>
+                                            <h5>
                                                 <span class="badge badge-success text-light">ACCEPTED</span>
-                                            </h4>
+                                            </h5>
                                         @else
-                                            <h4>
+                                            <h5>
                                                 <span class="badge badge-danger text-light">REJECTED</span>
-                                            </h4>
+                                            </h5>
 
                                         @endif
                                     </td>
@@ -405,6 +410,101 @@
                             </tbody>
                         </table>
                         {{$ot->links()}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="salary-record" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-light" ><h5>Salary Record</h5></div>
+                <div class="row mt-5">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header bg-primary text-light d-flex justify-content-between">
+                                <h5>Current salary</h5>
+                            </div>
+                            <table class="table table-hover table-striped table-bordered text-center">
+                                <thead class="text-secondary">
+                                    <tr>
+                                        <th scope="col">Current Daily Rate</th>
+                                        <th scope="col">Current Biweekly Rate</th>
+                                        <th scope="col">Current Monthly Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td scope="col">
+                                            ${{Auth::user()->daily_rate}}
+                                        </td>
+                                        <td scope="col">
+                                            ${{Auth::user()->bi_weekly_rate}}
+                                        </td>
+                                        <td scope="col">
+                                            ${{Auth::user()->monthly_rate}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header bg-primary text-light"><h5>Salary History</h5></div>
+                            <div class="card-body">
+                                <table class="table table-hover table-bordered text-center">
+                                    <thead class="text-secondary">
+                                        <tr>
+                                            <th scope="col">Daily Rate</th>
+                                            <th scope="col">Biweekly Rate</th>
+                                            <th scope="col">Monthly Rate</th>
+                                            <th scope="col">Note / Comment</th>
+                                            <th scope="col" class="text-center">Modified on</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($salary as $s)
+                                            <tr class="font-weight-bold">
+            
+                                                <td scope="col">
+                                                    ${{$s->daily_rate}}
+                                                    <h5>
+                                                        <p class="badge badge-{{($s->status!='INCREASE') ? 'danger' : 'success'}}">
+                                                            ({{$s->add_or_ded_daily}})
+                                                        </p>
+                                                    </h5>
+                                                </td>
+                                                <td scope="col">
+                                                    ${{$s->bi_weekly_rate}}
+                                                    <h5>
+                                                        <p class="badge badge-{{($s->status!='INCREASE') ? 'danger' : 'success'}}">
+                                                            ({{$s->add_or_ded_biweekly}})
+                                                        </p>
+                                                    </h5>
+                                                </td>
+                                                <td scope="col d-flex justify-content-between">
+                                                    ${{$s->monthly_rate}}
+                                                    <h5>
+                                                        <p class="badge badge-{{($s->status!='INCREASE') ? 'danger' : 'success'}}">
+                                                            ({{$s->add_or_ded_monthly}})
+                                                        </p>
+                                                    </h5>
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{$s->note}}
+                                                </td>
+                                                <td scope="col" class="align-middle">{{{date("F jS, Y", strtotime($s->created_at))}}}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -449,7 +549,7 @@
                         <input type="date" class="form-control mb-2" required name='date_of_ot' value="{{date('Y-m-d')}}">
 
                         <label for="">Number of Hours</label>
-                        <input type="text" class="form-control mb-2" required name='hours'>
+                        <input type="number" class="form-control mb-2" required name='hours' step=".5">
 
                         <label for="">Who gave you the task? &nbsp;*For approval</label>
                         <input type="text" class="form-control mb-2" required name='for_approval'>
@@ -503,6 +603,14 @@
                                     <input type="date" name="to" class="form-control" value="{{date('Y-m-d')}}">
                                 </div>
                             </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    Comments (This can be left blank)
+                                    
+                                    <textarea name="note" id="" cols="50" rows="2" class="form-control"></textarea>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -527,7 +635,7 @@
             <div class="modal-body">
                 <ul class="list-group">
                     @foreach ($all_ann as $a)
-                        <li class="list-group-item"><a href="#" class="open-ann mb-1 text-dark"  data-title="{{$a->title}}" data-content="{{$a->content}}"><h4>{{$a->title}}</h4></a>
+                        <li class="list-group-item"><a href="#" class="open-ann mb-1 text-dark"  data-title="{{$a->title}}" data-content="{{$a->content}}"><h5>{{$a->title}}</h5></a>
                             <small><b>Posted on:</b> {{{date("F jS, Y", strtotime($a->created_at))}}}</small>
                         </li>
                     @endforeach
@@ -553,7 +661,7 @@
 
                 <ul class="list-group">
                     @foreach ($all_dept as $a)
-                        <li class="list-group-item"><a href="#" class="open-ann mb-1 text-dark"  data-title="{{$a->title}}" data-content="{{$a->content}}"><h4>{{$a->title}}</h4></a>
+                        <li class="list-group-item"><a href="#" class="open-ann mb-1 text-dark"  data-title="{{$a->title}}" data-content="{{$a->content}}"><h5>{{$a->title}}</h5></a>
                         <small><b>Posted on:</b> {{{date("F jS, Y", strtotime($a->created_at))}}}</small>
                         </li>
                     @endforeach
@@ -578,7 +686,7 @@
             <div class="modal-body">
                 <ul class="list-group">
                     @foreach ($all_pos as $a)
-                        <li class="list-group-item"><a href="#" class="open-ann mb-1 text-dark"  data-title="{{$a->title}}" data-content="{{$a->content}}"><h4>{{$a->title}}</h4></a>
+                        <li class="list-group-item"><a href="#" class="open-ann mb-1 text-dark"  data-title="{{$a->title}}" data-content="{{$a->content}}"><h5>{{$a->title}}</h5></a>
                             <small><b>Posted on:</b> {{{date("F jS, Y", strtotime($a->created_at))}}}</small>
                         </li>
                     @endforeach
@@ -603,7 +711,7 @@
             <div class="modal-body">
                 <ul class="list-group">
                     @foreach ($all_pvt as $a)
-                        <li class="list-group-item"><a href="#" class="open-ann mb-1 text-dark"  data-title="{{$a->title}}" data-content="{{$a->content}}"><h4>{{$a->title}}</h4></a>
+                        <li class="list-group-item"><a href="#" class="open-ann mb-1 text-dark"  data-title="{{$a->title}}" data-content="{{$a->content}}"><h5>{{$a->title}}</h5></a>
                             <small><b>Posted on:</b> {{{date("F jS, Y", strtotime($a->created_at))}}}</small>
                         </li>
                     @endforeach

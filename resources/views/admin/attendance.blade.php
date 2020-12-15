@@ -27,7 +27,7 @@
                                 <h4 class="mr-3"><small class="text-muted">SELECT DATE</small></h4>
                                 <input type="date" name="date" id="date" class="form-control mb-3 ml-5" value="{{date('Y-m-d')}}">
                                 <span class="input-group-btn">
-                                <button class="btn btn-primary px-3 mx-3 filter" id="filter" onclick="charot()">Filter</button>
+                                <button class="btn btn-primary px-3 mx-3 filter get-ot" id="filter" onclick="charot()">Filter</button>
                                 </span>
                             </div>
                         </div>
@@ -75,6 +75,32 @@
                                         <td>{{$r->fname . ' ' . $r->lname}}</td>
                                         <td>{{($r->position)}}</td>
                                         <td>{{($r->type)}}</td>
+
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card mb-3 shadow" style="margin-top:38px;">
+                    <h4 class="card-header text-light bg-secondary">ON TIME OFF</h4>
+                    <div class="card-body">
+                        <table class="table table-hover table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                <th scope="col" class="text-primary">Employee</th>
+                                <th scope="col" class="text-primary">reason</th>
+                                {{-- <th scope="col" class="text-primary">Reason of absence</th> --}}
+
+                                </tr>
+                            </thead>
+                            <tbody id="ot-body">
+                                @foreach ($ots as $r)
+                                    <tr>
+                                        <td>{{$r->fname . ' ' . $r->lname}}</td>
+                                        <td>{{($r->task_or_eps)}}</td>
+                                        {{-- <td>{{($r->type)}}</td> --}}
 
                                     </tr>
                                 @endforeach
@@ -141,6 +167,24 @@
             data : { "_token": "{{ csrf_token() }}" , "date" : date , "position" : position} ,
             success:function(data) {
                 addARow(data);
+            }
+        });
+    });
+
+        //this fetches roster today only
+    $('.get-ot').click(function(){
+        var date = $('#date').val();
+        $.ajax({
+            type:'POST',
+            url:'/get-all-ot',
+            data : { "_token": "{{ csrf_token() }}" , "date" : date } ,
+            success:function(data) {
+                // addARow(data);
+                console.log(data);
+                $('#ot-body').empty();
+                $.each(data, function(key, val){
+                    $('#ot-body').append("<tr><td>"+val.fname + ' ' +val.lname+"</td><td>"+val.task_or_eps+"</td></tr>");
+                });
             }
         });
     });

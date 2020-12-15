@@ -44,6 +44,7 @@
                                     <th scope="col">Name</th>
                                     <th scope="col">Reason</th>
                                     <th scope="col">Date</th>
+                                    <th scope="col">Comments</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Action</th>
 
@@ -56,6 +57,8 @@
                                         <td>{{$x->emp_name}}</td>
                                         <td>{{$x->type}}</td>
                                         <td>{{date("F d, Y", strtotime($x->dates))}}</td>
+                                        <td>{{$x->note == '' ? '---' : $x->note}}</td>
+
                                         <td>
                                             @if ($x->status == 'PENDING')
                                                 <h4>
@@ -225,6 +228,7 @@
                 success:function(data) {
 
                     $('#leaveBody').empty();
+                    console.log(data);
 
                     $.each(data, function(key, val){
 
@@ -262,7 +266,13 @@
                                 "</td>";
                         }
 
-                        $('#leaveBody').append("<tr><td>"+val.name+"</td><td>"+val.type+"</td><td>"+val.date+"</td><td>"+val.status+"</td>"+
+                        if(val.note == null){
+                            note = "---";
+                        }else{
+                            note = val.note;
+                        }
+
+                        $('#leaveBody').append("<tr><td>"+val.name+"</td><td>"+val.type+"</td><td>"+val.date+"</td><td>"+note+"</td><td>"+val.status+"</td>"+
                             btns+
                             "</tr>")          
                     });
@@ -419,8 +429,14 @@
 
                                     "</td>";
                             }
+                            var note = "";
+                            if(val.note == null){
+                                note = "---";
+                            }else{
+                                note = val.note;
+                            }
 
-                            $('#leaveBody').append("<tr><td>"+val.name+"</td><td>"+val.type+"</td><td>"+val.date+"</td><td>"+val.status+"</td>"+
+                            $('#leaveBody').append("<tr><td>"+val.name+"</td><td>"+val.type+"</td><td>"+val.date+"</td><td>"+note+"</td><td>"+val.status+"</td>"+
                                 btns+
                                 "</tr>")          
                         });

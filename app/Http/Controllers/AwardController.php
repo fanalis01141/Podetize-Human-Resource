@@ -47,7 +47,7 @@ class AwardController extends Controller
 
         if($request->award_status == 'commend'){
             Announcements::create([
-                'title' => $request->title,
+                'title' => 'Commendation: '.$request->title,
                 'content' => $request->content,
             ]);
 

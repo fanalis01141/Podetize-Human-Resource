@@ -15,6 +15,7 @@ use App\Schedule;
 use App\Icon;
 use App\Award;
 use DateTime;
+use App\Salary;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -129,13 +130,14 @@ class HomeController extends Controller
 
         $rfi = Award::where('emp_id', Auth::user()->id)->where('type','rfi')->get();
         $commend = Award::where('emp_id', Auth::user()->id)->where('type','commend')->get();
+        $salary = Salary::where('emp_id', Auth::user()->id)->orderBy('created_at','desc')->get();
 
 
 
         $ot = Overtime::where('emp_id', Auth::user()->id)->paginate(5);
         $docu = Document::where('emp_id', Auth::user()->id)->first();
         return view('home', compact('ann', 'ot', 'ann1','ann2', 'ann3','all_ann','all_pvt','all_dept','all_pos',
-                                     'upcoming_b', 'upcoming_w', 'remaining_sick','remaining_vac', 'diffYears','leave','docu','commend','rfi'));
+                                     'upcoming_b', 'upcoming_w', 'remaining_sick','remaining_vac', 'diffYears','leave','docu','commend','rfi','salary'));
     }
 
     public function attendtoday()

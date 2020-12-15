@@ -361,6 +361,7 @@ class PivotController extends Controller
                             'total_days' => $total_days + 1,
                             'dates' => $date->format('Y-m-d'),
                             'status' => 'PENDING',
+                            'note' => $request->note,
                             'sick_leaves_left' => $request->type == 'Paid sick leave' ?  $remaining_sick - $total_days - 1 :  $remaining_sick ,
                             'vacation_leaves_left' => $request->type == 'Paid vacation leave' ?  $remaining_vac - $total_days - 1 :  $remaining_vac,
                         ]);
@@ -383,6 +384,7 @@ class PivotController extends Controller
                             'total_days' => $total_days + 1,
                             'dates' => $date->format('Y-m-d'),
                             'status' => 'PENDING',
+                            'note' => $request->note,
                             'sick_leaves_left' => $request->type == 'Paid sick leave' ?  $diffYears + 2 - $total_days - 1 :  $default ,
                             'vacation_leaves_left' => $request->type == 'Paid vacation leave' ?  $diffYears + 2 - $total_days - 1 :  $default,
                         ]);
@@ -405,6 +407,8 @@ class PivotController extends Controller
                             'total_days' => $total_days + 1,
                             'dates' => $date->format('Y-m-d'),
                             'status' => 'PENDING',
+                            'note' => $request->note,
+
                             'sick_leaves_left' => $request->type == 'Paid sick leave' ?  $remaining_sick - $total_days - 1 :  $remaining_sick ,
                             'vacation_leaves_left' => $request->type == 'Paid vacation leave' ?  $remaining_vac - $total_days - 1 :  $remaining_vac,
                         ]);
@@ -426,6 +430,7 @@ class PivotController extends Controller
                         'total_days' => $total_days + 1,
                         'dates' => $date->format('Y-m-d'),
                         'status' => 'PENDING',
+                        'note' => $request->note,
                         'sick_leaves_left' => 0 ,
                         'vacation_leaves_left' => 0,
                     ]);

@@ -57,12 +57,22 @@ class AttendanceController extends Controller
             }
         });
 
+
         $attend_today = $upcoming_ws->filter(function ($value) {
-             return !is_null($value);
+            return !is_null($value);
         });
 
+        $ots = DB::table('users')
+            ->join('overtimes', 'users.id', '=', 'overtimes.emp_id')
+            ->select('users.*', 'overtimes.*')
+            ->where('users.active','1')
+            ->where('overtimes.status','PENDING')
+            ->get();
 
-        return view('admin.attendance', compact('position','attend_today','leave_today'));
+        
+
+
+        return view('admin.attendance', compact('position','attend_today','leave_today','ots'));
     }
 
     /**
@@ -249,6 +259,18 @@ class AttendanceController extends Controller
                             ->get();
         }
         return $leave_today;
+    }
+
+    public function getAllOt(Request $request){
+        $users = DB::table('users')
+                ->join('overtimes', 'users.id', '=', 'overtimes.emp_id')
+                ->select('users.*', 'overtimes.*')
+                ->where('users.active','1')
+                // ->where('overtimes.status','PENDING')
+                ->where('overtimes.date', $request->date)
+                ->get();
+
+        return $users;
     }
 
     public function getAllAttendance(Request $request){

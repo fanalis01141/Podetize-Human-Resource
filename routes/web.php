@@ -114,6 +114,8 @@ Route::group(['middleware' => ['auth' , 'admin']], function () {
     Route::post('/check-time-off', 'ScheduleController@checkOff')->name('schedule.check');
     Route::post('/get-all-off', 'AttendanceController@getAllOff')->name('attendance.getalloff');
     Route::post('/get-all-attendance', 'AttendanceController@getAllAttendance')->name('attendance.getallattendance');
+    Route::post('/get-all-off', 'AttendanceController@getAllOff')->name('attendance.getalloff');
+    Route::post('/get-all-ot', 'AttendanceController@getAllOt')->name('attendance.getallot');
     Route::post('/parse-date-for-display', 'AttendanceController@parseDateForDisplay')->name('attendance.parseDateForDisplay');
     Route::post('/mark-absent-by-date', 'AttendanceController@markAbsentByDate')->name('attendance.markAbsentByDate');
     Route::post('/workversary-update', 'PivotController@workversaryUpdate')->name('workversarry.update');

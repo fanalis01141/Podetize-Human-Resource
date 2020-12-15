@@ -225,6 +225,8 @@ class LeaveController extends Controller
             $all_leaves[$key]['id'] = $value->id;
             $all_leaves[$key]['name'] = $value->emp_name;
             $all_leaves[$key]['type'] = $value->type;
+            $all_leaves[$key]['note'] = $value->note;
+
             $all_leaves[$key]['date'] = date("F d, Y", strtotime($value->dates));
             $all_leaves[$key]['status'] = $value->status;
         }    
@@ -245,6 +247,8 @@ class LeaveController extends Controller
             $all_leaves[$key]['id'] = $value->id;
             $all_leaves[$key]['name'] = $value->emp_name;
             $all_leaves[$key]['type'] = $value->type;
+            $all_leaves[$key]['note'] = $value->note;
+
             $all_leaves[$key]['date'] = date("F d, Y", strtotime($value->dates));
             $all_leaves[$key]['status'] = $value->status;
         }    

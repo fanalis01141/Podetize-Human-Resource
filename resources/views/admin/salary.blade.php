@@ -104,11 +104,7 @@
                         <tbody>
                             @foreach ($salary as $s)
                                 <tr class="font-weight-bold">
-                                {{-- @if ($s->status == 'INCREASE')
-                                    style='background-color:green'
-                                @else
-                                    style='background-color:#ff3333'
-                                @endif --}}
+
                                     <td scope="col">
                                         ${{$s->daily_rate}}
                                         <h5>
