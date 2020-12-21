@@ -593,4 +593,57 @@ class PivotController extends Controller
         return view('admin.awards', compact('users', 'showDep', 'showPos', 'commend_icons','rfi_icons'));
     }
 
+    public function employeeAttendance(){
+        // dd('123');
+        $position = Department::distinct()->get(['position']);
+        $roster_today = \DB::table('users')
+                        ->join('schedules', 'users.id', '=', 'schedules.emp_id')
+                        ->select('users.*', 'schedules.*')
+                        ->where(date('l'), 'ON')
+                        ->where('users.active','1')
+                        ->get();
+
+        $leave_today = \DB::table('users')
+                        ->join('leaves', 'users.id', '=', 'leaves.emp_id')
+                        ->select('users.*', 'leaves.*')
+                        ->where('dates', date('Y-m-d'))
+                        ->where('leaves.status','=', 'APPROVED')
+                        ->where('users.active','1')
+                        ->get();
+
+
+        $upcoming_ws = [];
+        $upcoming_ws = $roster_today->map(function($r){
+            $leave_today = \DB::table('users')
+                    ->join('leaves', 'users.id', '=', 'leaves.emp_id')
+                    ->select('users.*', 'leaves.*')
+                    ->where('dates', date('Y-m-d'))
+                    ->where('leaves.status','=', 'APPROVED')
+                    ->where('users.active','1')
+                    ->get();
+
+            if( ! $leave_today->contains('emp_id', $r->emp_id)){
+                return [
+                    'id' => $r->emp_id,
+                    'name' => $r->fname . ' ' . $r->lname,
+                    'position' => $r->position,
+                ];
+            }
+        });
+
+
+        $attend_today = $upcoming_ws->filter(function ($value) {
+            return !is_null($value);
+        });
+
+        $ots = \DB::table('users')
+            ->join('overtimes', 'users.id', '=', 'overtimes.emp_id')
+            ->select('users.*', 'overtimes.*')
+            ->where('users.active','1')
+            ->where('overtimes.status','PENDING')
+            ->get();
+
+        return view('employee.attendance', compact('position','attend_today','leave_today','ots'));
+    }
+
 }

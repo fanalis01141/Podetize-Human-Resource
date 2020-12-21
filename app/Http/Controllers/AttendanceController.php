@@ -67,6 +67,7 @@ class AttendanceController extends Controller
             ->select('users.*', 'overtimes.*')
             ->where('users.active','1')
             ->where('overtimes.status','PENDING')
+            ->where('overtimes.date', date('Y-m-d'))
             ->get();
 
         
@@ -240,13 +241,14 @@ class AttendanceController extends Controller
 
     public function getAllOff(Request $request){
         $time = strtotime($request->date);
-        $newDate = date('Y-m-d',$time);
+        $newDate = date('Y-m-d', $time);
 
         if($request->position == 'ALL'){
             $leave_today = DB::table('users')
                             ->join('leaves', 'users.id', '=', 'leaves.emp_id')
                             ->select('users.*', 'leaves.*')
                             ->where('dates', $newDate)
+                            ->where('leaves.status','APPROVED')
                             ->where('users.active','1')
                             ->get();
         }else{
@@ -255,6 +257,7 @@ class AttendanceController extends Controller
                             ->select('users.*', 'leaves.*')
                             ->where('dates', $newDate)
                             ->where('users.position', $request->position)
+                            ->where('leaves.status','APPROVED')
                             ->where('users.active','1')
                             ->get();
         }

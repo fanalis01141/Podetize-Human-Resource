@@ -7,20 +7,24 @@
 
         <div class="row">
             <div class="col-md-12">
-                <div class="text-right mb-3  d-flex justify-content-between">
-                    <div>
-                        <a class="btn btn-success text-light">View Attendance</a>
-                        <button class="btn btn-warning" style="border-color: black;" data-toggle="modal" data-target="#salary-record">View Salary Record</button>
-                    </div>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST">
-                        @csrf
+                <div class="text-right mb-3 d-flex justify-content-between">
 
-                    </form>
-                    <a href="{{ route('logout') }}" class="btn btn-secondary"
+                        
+                        <form action="{{route('employee.attendance')}}" method="POST">
+                            @csrf
+                            
+                            <button class="btn btn-success text-light" type="submit">View Attendance</button>
+                        </form>
+                        <button class="btn btn-warning" style="border-color: black;" data-toggle="modal" data-target="#salary-record">View Salary Record</button>
+                        <a href="{{ route('logout') }}" class="btn btn-secondary"
                         onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();"></i>
-                        {{ __('LOGOUT') }}
-                    </a>
+                                            document.getElementById('logout-form').submit();"></i>
+                            {{ __('LOGOUT') }}
+                        </a>
+                    {{-- <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        
+                    </form> --}}
                 </div>
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -299,20 +303,37 @@
                             <h5>  <i class="fas fa-glass-cheers" style="color:yellow"></i> Workversary celebrants for {{date('F')}}!</h5>
                         </div>
                     <div class="card-body">
-                        @if ($upcoming_w == null)
-                            <div class="text-center">
+                        <table class="table table-hover table-bordered table-striped">
 
-                                <p>No workversary  celebrants for this month </p> <i class="far fa-frown fa-3x"></i>
-                            </div>
-                        @endif
+                            @if ($upcoming_w == null)
+                                <div class="text-center">
 
-                        @foreach ($upcoming_w as $w)
-                            <tr>
-                                <td scope="col">{{$w['name']}}</td>
-                                <td scope="col">{{{date("F jS, Y", strtotime($w['workversary']))}}}</td>
-                                <td scope="col">{{$w['days_left']}}</td>
-                            </tr>
-                        @endforeach
+                                    <p>No workversary  celebrants for this month </p> <i class="far fa-frown fa-3x"></i>
+                                </div>
+                            @endif
+                                
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-info">Name</th>
+                                        <th scope="col" class="text-info">Date</th>
+                                        <th scope="col" class="text-info">Days Left</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <div class="text-center">
+                                        @if ($upcoming_b == null)
+                                            <p>No workversary  celebrants for this month </p> <i class="far fa-frown fa-3x"></i>
+                                        @endif
+                                    </div>
+                                    @foreach ($upcoming_w as $w)
+                                    <tr>
+                                        <td scope="col">{{$w['name']}}</td>
+                                        <td scope="col">{{{date("F jS, Y", strtotime($w['workversary']))}}}</td>
+                                        <td scope="col">{{$w['days_left']}}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -420,10 +441,10 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-light" ><h5>Salary Record</h5></div>
-                <div class="row mt-5">
+                <div class="row mt-3">
                     <div class="col-md-12">
                         <div class="card">
-                            <div class="card-header bg-primary text-light d-flex justify-content-between">
+                            <div class="card-header bg-secondary text-light d-flex justify-content-between">
                                 <h5>Current salary</h5>
                             </div>
                             <table class="table table-hover table-striped table-bordered text-center">
@@ -452,10 +473,10 @@
                     </div>
                 </div>
 
-                <div class="row mt-5">
+                <div class="row mt-3">
                     <div class="col-md-12">
                         <div class="card">
-                            <div class="card-header bg-primary text-light"><h5>Salary History</h5></div>
+                            <div class="card-header bg-secondary text-light"><h5>Salary History</h5></div>
                             <div class="card-body">
                                 <table class="table table-hover table-bordered text-center">
                                     <thead class="text-secondary">

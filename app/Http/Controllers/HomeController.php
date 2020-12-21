@@ -82,7 +82,7 @@ class HomeController extends Controller
             'workversary' => $value->workversary, ]; 
         })
         ->sortBy('days_left')->map(function ($value) {
-                $value['days_left'] = $value['days_left'] == 0 ? 'Today!' : $value['days_left'] . ' days left'; 
+                $value['days_left'] = $value['days_left'] == 0 ? 'Today!' : $value['days_left']; 
                 return $value; 
         });
         //END UPCOMING WORKVERSARY

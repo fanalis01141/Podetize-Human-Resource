@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('content-dashboard')
+@section('content')
 <div class="container-fluid">
     <div class="row">
 
@@ -36,7 +36,7 @@
                                 <tr>
                                     <th scope="col" class="text-primary">Employee</th>
                                     <th scope="col" class="text-primary">Position</th>
-                                    <th scope="col" class="text-primary">Action</th>
+                                    {{-- <th scope="col" class="text-primary">Action</th> --}}
                                 </tr>
                             </thead>
                             <tbody id='attendance_body'>
@@ -44,7 +44,7 @@
                                     <tr>
                                         <td>{{$r['name']}}</td>
                                         <td>{{($r['position'])}}</td>
-                                        <td><button class="btn btn-danger btn-sm absent" data-myID={{$r['id']}} data-name={{$r['name']}}>Mark as absent</button></td>
+                                        {{-- <td><button class="btn btn-danger btn-sm absent" data-myID={{$r['id']}} data-name={{$r['name']}}>Mark as absent</button></td> --}}
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -84,7 +84,7 @@
                 </div>
 
                 <div class="card mb-3 shadow" style="margin-top:38px;">
-                    <h4 class="card-header text-light bg-secondary">ON TIME OFF</h4>
+                    <h4 class="card-header text-light bg-secondary">OVERTIME</h4>
                     <div class="card-body">
                         <table class="table table-hover table-bordered table-striped">
                             <thead>
@@ -122,41 +122,6 @@
 
     <script>
 
-    $('.absent').click(function(){
-        var id = ($(this).attr('data-myID'));
-        var name = ($(this).attr('data-name'));
-        var date = $('#date').val();
-
-            Swal.fire({
-                title : 'Mark as absent?',
-                text : "Are you sure you want " + name + " to be marked as absent?",
-                icon : "error",
-                showConfirmButton: true,
-                showCloseButton:true,
-                showCancelButton:true,
-                allowOutsideClick: false,
-                confirmButtonText: 'Yes, mark as absent.',
-                confirmButtonColor: '#E3342F',
-            }).then(function(accept){
-            if(accept.isConfirmed == true){
-                $.ajax({
-                    type:'POST',
-                    url:'leave',
-                    data : { "_token": "{{ csrf_token() }}" , "emp_id" : id, "date" : date} ,
-                    success:function(data) {
-                        Swal.fire(
-                            data,
-                            '',
-                            'success'
-                        ).then(function(accept){
-                            location.reload();
-                        })
-                    }
-                });
-            }
-        })
-    });
-
     //this fetches roster today only
     $('.filter').click(function(){
         var date = $('#date').val();
@@ -190,7 +155,7 @@
     });
 
 
-    //this fetches all off only
+    //this fetches all off/leave only
     $('#filter').click(function(){
         var date = $('#date').val();
         var position = $('#position').val()
@@ -222,45 +187,8 @@
     function addARow(data){
         $('#attendance_body').empty();
         $.each(data, function(key, val){
-            $('#attendance_body').append("<tr><td>"+val.name+"</td><td>"+val.position+"</td><td><button class='btn btn-danger btn-sm absent' data-myID='"+val.id+"' data-name='"+val.name+"'>Mark as absent</button></td></tr>")
+            $('#attendance_body').append("<tr><td>"+val.name+"</td><td>"+val.position+"</td></tr>")
         })
-
-        $('.absent').click(function(){
-            var id = ($(this).attr('data-myID'));
-            var name = ($(this).attr('data-name'));
-            var date = $('#date').val();
-
-            Swal.fire({
-                title : 'Mark as absent?',
-                text : "Are you sure you want " + name + " to be marked as absent?",
-                icon : "error",
-                showConfirmButton: true,
-                showCloseButton:true,
-                showCancelButton:true,
-                allowOutsideClick: false,
-                confirmButtonText: 'Yes, mark as absent.',
-                confirmButtonColor: '#E3342F',
-            }).then(function(accept){
-                if(accept.isConfirmed == true){
-                    $.ajax({
-                        type:'POST',
-                        url:'/mark-absent-by-date',
-                        data : { "_token": "{{ csrf_token() }}" , "emp_id" : id, "date" : date} ,
-                        success:function(data) {
-                            console.log(data);
-                            Swal.fire(
-                                data,
-                                '',
-                                'success'
-                            ).then(function(accept){
-                                location.reload();
-                            })
-                        }
-                    });
-                }
-            })
-        });
-
     }
 
     </script>

@@ -20,7 +20,7 @@ class CreateOvertimesTable extends Migration
             $table->string('department');
             $table->string('task_or_eps');
             $table->string('date');
-            $table->integer('hours');
+            $table->decimal('hours', $precision = 5, $scale = 1);;
             $table->string('for_approval');
             $table->string('status');
             $table->timestamps();

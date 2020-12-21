@@ -46,6 +46,11 @@ Route::post('/item/{itemid}/add', 'ItemController@add')->name('item.add');
 Route::post('/accept-leave', 'LeaveController@acceptleave')->name('leave.accept-leave');
 Route::post('/depid', 'HomeController@fetchdepartment');
 Route::resource('overtime', 'OvertimeController');
+Route::post('/get-all-off', 'AttendanceController@getAllOff')->name('attendance.getalloff');
+Route::post('/get-all-attendance', 'AttendanceController@getAllAttendance')->name('attendance.getallattendance');
+Route::post('/get-all-off', 'AttendanceController@getAllOff')->name('attendance.getalloff');
+Route::post('/get-all-ot', 'AttendanceController@getAllOt')->name('attendance.getallot');
+Route::post('/parse-date-for-display', 'AttendanceController@parseDateForDisplay')->name('attendance.parseDateForDisplay');
 
 Auth::routes();
 
@@ -66,10 +71,6 @@ Route::group(['middleware' => ['auth' , 'admin']], function () {
     Route::resource('documents', 'DocumentController');
     Route::resource('icon', 'IconController');
     Route::resource('award', 'AwardController');
-
-
-
-
     Route::POST('/setPosition', 'DepartmentController@setPosition')->name('setPosition');
     Route::POST('/delPosition', 'DepartmentController@delPosition')->name('delPosition');
     Route::POST('/editDeduction', 'DeductionController@editDeduction')->name('editDeduction');
@@ -84,17 +85,13 @@ Route::group(['middleware' => ['auth' , 'admin']], function () {
     Route::post('/cash-advance-edit/{id}', 'DeductionController@editCA')->name('ded.editCA');
     Route::post('/cash-advance-delete/{id}', 'DeductionController@deleteCA')->name('ded.delCA');
     Route::get('/get-inventory-list', 'ItemController@getList');
-
-
     Route::get('/homedashboard', 'HomeController@homedashboard')->name('homedashboard');
     Route::get('/employees', 'HomeController@dashboard')->name('dashboard');
     Route::get('/payroll', 'PayrollController@index')->name('payroll');
-
     Route::POST('/setPosition', 'DepartmentController@setPosition')->name('setPosition');
     Route::POST('/delPosition', 'DepartmentController@delPosition')->name('delPosition');
     Route::POST('/setHoliday', 'PivotController@setHoliday')->name('setHoliday');
     Route::POST('/delHoliday', 'PivotController@delHoliday')->name('delHoliday');
-
     Route::POST('/editDeduction', 'DeductionController@editDeduction')->name('editDeduction');
     Route::post('/employee/{id}/promote','PivotController@promote')->name('employee.promote');
     Route::post('/employee/{id}/terminate','PivotController@terminate')->name('employee.terminate');
@@ -112,11 +109,7 @@ Route::group(['middleware' => ['auth' , 'admin']], function () {
     Route::post('/filter-ot', 'OvertimeController@filter')->name('overtime.filter');
     Route::post('/new-salary-record','SalaryController@customStore')->name('salary.customStore');
     Route::post('/check-time-off', 'ScheduleController@checkOff')->name('schedule.check');
-    Route::post('/get-all-off', 'AttendanceController@getAllOff')->name('attendance.getalloff');
-    Route::post('/get-all-attendance', 'AttendanceController@getAllAttendance')->name('attendance.getallattendance');
-    Route::post('/get-all-off', 'AttendanceController@getAllOff')->name('attendance.getalloff');
-    Route::post('/get-all-ot', 'AttendanceController@getAllOt')->name('attendance.getallot');
-    Route::post('/parse-date-for-display', 'AttendanceController@parseDateForDisplay')->name('attendance.parseDateForDisplay');
+
     Route::post('/mark-absent-by-date', 'AttendanceController@markAbsentByDate')->name('attendance.markAbsentByDate');
     Route::post('/workversary-update', 'PivotController@workversaryUpdate')->name('workversarry.update');
     Route::post('/accept-leave', 'LeaveController@acceptleave')->name('leave.accept');
@@ -132,99 +125,96 @@ Route::group(['middleware' => ['auth' , 'admin']], function () {
     Route::post('/leave-search-by-name', 'LeaveController@leaveSearchByName');
     Route::get('/awards-and-rfi', 'PivotController@awardsAndRfi')->name('zz');
     Route::get('/awards-rfi', 'AwardController@showrfi');
-
-
-
-
-
-
-
+    
     Route::post('users/create-new', function (Request $request) {
 
 
-    $request->validate([
-        'username' => 'required|unique:users',
-        'department' => 'required',
-        'position' => 'required',
-    ]);
+        $request->validate([
+            // 'username' => 'required|unique:users',
+            'username' => 'required',
+            'department' => 'required',
+            'position' => 'required',
+        ]);
 
-    $workversary = Carbon::parse($request->hired)->addYear();
-    $parsed_work = date('Y-m-d', strtotime($workversary));
-
-
-    $user = User::create([
-        'fname' => $request->fname,
-        'lname' => $request->lname,
-        'date_hired' => $request->hired,
-        'workversary' => $parsed_work,
-        'username' => $request->username,
-        'password' => Hash::make($request->password),
-        'weeks_of_training' => $request->weeks_of_training,
-        'emp_status' => $request->employment_type == 'FULL' ? 'Full time' : 'Part time',
-        'department' => $request->department,
-        'position' => $request->position,
-        'priority' => 'LO',
-        'active' => '1',
-        'referred_by' => $request->referred_by,
-        'birth_date' => $request->birthday,
-        'daily_rate' => $request->daily_rate,
-        'bi_weekly_rate' => $request->bi_weekly_rate,
-        'monthly_rate' => $request->monthly_rate,
-    ]);
-
-    Veem::create([
-        'user_id' => $user->id,
-        'veem_email' => $request->veem_email,
-        'complete_bank_account_name' => $request->complete_bank_account_name,
-        'veem_mobile_number' => $request->veem_mobile_number
-    ]);
-
-    Contact::create([
-        'user_id' => $user->id,
-        'email' => $request->email,
-        'address' => $request->address,
-        'contact_number' => $request->contact_number,
-        'emergency_contact_person' => $request->emergency_contact_person,
-        'emergency_contact_number' => $request->emergency_contact_number
-    ]);
-
-    Salary::create([
-        'emp_id' => $user->id,
-        'daily_rate' => $request->daily_rate,
-        'bi_weekly_rate' => $request->bi_weekly_rate,
-        'monthly_rate' => $request->monthly_rate,
-        'add_or_ded_daily' => '0',
-        'add_or_ded_biweekly' => '0',
-        'add_or_ded_monthly' => '0',
-        'status' => 'INCREASE',
-        'note' => 'First Salary'
-    ]);
-
-    Document::create([
-        'emp_id' => $user->id
-    ]);
-
-    Schedule::create([
-        'emp_id' => $user->id,
-        'Monday' => 'ON',
-        'Tuesday' => 'ON',
-        'Wednesday' => 'ON',
-        'Thursday' => 'ON',
-        'Friday' => 'ON',
-        'Saturday' => 'OFF',
-        'Sunday' => 'OFF'
-    ]);
+        $workversary = Carbon::parse($request->hired)->addYear();
+        $parsed_work = date('Y-m-d', strtotime($workversary));
 
 
+        $user = User::create([
+            'fname' => $request->fname,
+            'lname' => $request->lname,
+            'date_hired' => $request->hired,
+            'workversary' => $parsed_work,
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+            'weeks_of_training' => $request->weeks_of_training,
+            'emp_status' => $request->employment_type == 'FULL' ? 'Full time' : 'Part time',
+            'department' => $request->department,
+            'position' => $request->position,
+            'priority' => 'LO',
+            'active' => '1',
+            'referred_by' => $request->referred_by,
+            'birth_date' => $request->birthday,
+            'daily_rate' => $request->daily_rate,
+            'bi_weekly_rate' => $request->bi_weekly_rate,
+            'monthly_rate' => $request->monthly_rate,
+        ]);
 
-    return redirect()->route('dashboard', $user->id)->with('success', 'SUCCESSFULLY ADDED NEW EMPLOYEE: '. $request->fname . ' ' . $request->lname);
+        Veem::create([
+            'user_id' => $user->id,
+            'veem_email' => $request->veem_email,
+            'complete_bank_account_name' => $request->complete_bank_account_name,
+            'veem_mobile_number' => $request->veem_mobile_number
+        ]);
+
+        Contact::create([
+            'user_id' => $user->id,
+            'email' => $request->email,
+            'address' => $request->address,
+            'contact_number' => $request->contact_number,
+            'emergency_contact_person' => $request->emergency_contact_person,
+            'emergency_contact_number' => $request->emergency_contact_number
+        ]);
+
+        Salary::create([
+            'emp_id' => $user->id,
+            'daily_rate' => $request->daily_rate,
+            'bi_weekly_rate' => $request->bi_weekly_rate,
+            'monthly_rate' => $request->monthly_rate,
+            'add_or_ded_daily' => '0',
+            'add_or_ded_biweekly' => '0',
+            'add_or_ded_monthly' => '0',
+            'status' => 'INCREASE',
+            'note' => 'First Salary'
+        ]);
+
+        Document::create([
+            'emp_id' => $user->id
+        ]);
+
+        Schedule::create([
+            'emp_id' => $user->id,
+            'Monday' => 'ON',
+            'Tuesday' => 'ON',
+            'Wednesday' => 'ON',
+            'Thursday' => 'ON',
+            'Friday' => 'ON',
+            'Saturday' => 'OFF',
+            'Sunday' => 'OFF'
+        ]);
+
+
+
+        return redirect()->route('dashboard', $user->id)->with('success', 'SUCCESSFULLY ADDED NEW EMPLOYEE: '. $request->fname . ' ' . $request->lname);
 
     })->name('users.create');
+    
 });
 
 
 Route::group(['middleware' => ['auth', 'user']], function () {
 
+    Route::post('/employee/attendance', 'PivotController@employeeAttendance')->name('employee.attendance');
     Route::post('/user-update', 'PivotController@selfUpdate')->name('selfUpdate');
     Route::get('/home', 'HomeController@index')->name('home');
     Route::post('/overtime/{id}','PivotController@fileOvertime')->name('employee.fileOvertime');
