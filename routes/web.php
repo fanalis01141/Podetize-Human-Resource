@@ -125,6 +125,7 @@ Route::group(['middleware' => ['auth' , 'admin']], function () {
     Route::post('/leave-search-by-name', 'LeaveController@leaveSearchByName');
     Route::get('/awards-and-rfi', 'PivotController@awardsAndRfi')->name('zz');
     Route::get('/awards-rfi', 'AwardController@showrfi');
+    Route::post('/update-salary-record','SalaryController@updateSalary')->name('salary.updateSalary');
     
     Route::post('users/create-new', function (Request $request) {
 

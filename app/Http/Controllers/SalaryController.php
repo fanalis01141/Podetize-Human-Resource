@@ -119,7 +119,52 @@ class SalaryController extends Controller
      */
     public function destroy(Salary $salary)
     {
-        //
+        // return $salary;
+        $clean_  = preg_replace('/[^a-zA-Z0-9_ -]/s','', $salary->add_or_ded_biweekly);
+        return $result;
+
     }
 
+    public function updateSalary(Request $request)
+    {
+        // return $request;
+        $user = User::find($request->emp_id);
+
+            //Old rate is bigger than new rate
+        if($user->daily_rate > $request->update_daily &&
+            $user->bi_weekly_rate > $request->update_bi &&
+            $user->monthly_rate > $request->update_monthly){
+
+            $add_or_ded_daily = ($user->daily_rate) - ($request->update_daily);
+            $add_or_ded_biweekly = ($user->bi_weekly_rate) - ($request->update_bi);
+            $add_or_ded_monthly = ($user->monthly_rate) - ($request->update_monthly);
+            $status = 'DEDUCTION';
+        }else{
+            //New rate is bigger than old rate
+            $add_or_ded_daily = ($request->update_daily) - ($user->daily_rate);
+            $add_or_ded_biweekly = ($request->update_bi) - ($user->bi_weekly_rate);
+            $add_or_ded_monthly =  ($request->update_monthly) - ($user->monthly_rate);
+            $status = 'INCREASE';
+        }
+
+        User::where('id', $request->emp_id)->update([
+            'daily_rate' => $request->update_daily,
+            'bi_weekly_rate' => $request->update_bi,
+            'monthly_rate' => $request->update_monthly,
+        ]);
+
+        Salary::where('id', $request->update_id)->update([
+            'daily_rate' => $request->update_daily,
+            'bi_weekly_rate' => $request->update_bi,
+            'monthly_rate' => $request->update_monthly,
+            'add_or_ded_daily' => $status == 'INCREASE' ? "+". $add_or_ded_daily : "-". $add_or_ded_daily,
+            'add_or_ded_biweekly' => $status == 'INCREASE' ? "+". $add_or_ded_biweekly : "-". $add_or_ded_biweekly,
+            'add_or_ded_monthly' => $status == 'INCREASE' ? "+". $add_or_ded_monthly : "-". $add_or_ded_monthly,
+            'status' => $status,
+            'note' => $request->update_note,
+        ]);
+        
+        return redirect()->back()->with('success', 'New salary has been updated');    
+    
+    }
 }

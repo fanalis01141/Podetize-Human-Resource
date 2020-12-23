@@ -33,6 +33,14 @@
         background-color: #3490dc !important;
         display: none !important;
     }
+
+    .deduct{
+        border: 1px solid red;
+    }
+
+    .inc{
+        border: 1px solid green;
+    }
     </style>
 
 </head>

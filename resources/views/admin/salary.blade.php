@@ -2,15 +2,6 @@
 
 @section('content-dashboard')
 
-<style>
-    .deduct{
-        border: 1px solid red;
-    }
-
-    .inc{
-        border: 1px solid green;
-    }
-</style>
 
 <div class="container-fluid">
     @if (session('success'))
@@ -86,6 +77,61 @@
                     </form>
                 </div>
             </div>
+
+            <div class="card" hidden id="update-salary">
+                <div class="card-header bg-primary text-light d-flex justify-content-between">
+                    <h5>Update Salary</h5>
+                    {{-- <button class="btn btn-success" id='modbtn'>Modify Salary</button> --}}
+                </div>
+                <table class="table table-hover table-striped table-bordered text-center">
+                    <thead class="text-secondary">
+                        <tr>
+                            <th scope="col">Current Daily Rate</th>
+                            <th scope="col">Current Biweekly Rate</th>
+                            <th scope="col">Current Monthly Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td scope="col">
+                                ${{$user->daily_rate}}
+                            </td>
+                            <td scope="col">
+                                ${{$user->bi_weekly_rate}}
+                            </td>
+                            <td scope="col">
+                                ${{$user->monthly_rate}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id='edit_panel'>
+                    <form action="{{route('salary.updateSalary', $user->id)}}" method="POST">
+                        @method('POST')
+                        @csrf
+                        <div class="row text-center">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control mt-3" name="update_id" id="update_id" placeholder="Enter updated daily rate">
+                                <input type="text" class="form-control mt-3" name="emp_id" id="emp_id" value="{{$user->id}}">
+<hr>
+
+                                <input type="text" class="form-control mt-3" name="update_daily" id="update_daily" placeholder="Enter updated daily rate">
+                                <input type="text" class="form-control mt-3" name="update_bi" id="update_bi" placeholder="Enter updated biweekly rate">
+                                <input type="text" class="form-control mt-3" name="update_monthly" id="update_monthly" placeholder="Enter updated monthly rate">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <hr>
+                                <input type="text" placeholder="Note / Comment" class="form-control" required name="update_note" id="update_note">
+                            </div>
+                        </div>
+                        <div class="text-right m-3">
+                            <button type="submit" class="btn btn-success">Update Record</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
         <div class="col-md-8">
             <div class="card">
@@ -99,6 +145,8 @@
                                 <th scope="col">Monthly Rate</th>
                                 <th scope="col">Note / Comment</th>
                                 <th scope="col" class="text-center">Modified on</th>
+                                <th scope="col" class="text-center">Action</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -133,6 +181,13 @@
                                         {{$s->note}}
                                     </td>
                                     <td scope="col" class="align-middle">{{{date("F jS, Y", strtotime($s->created_at))}}}</td>
+                                        {{-- {{$s->note}} --}}
+                                    <td scope="col" class="align-middle">
+                                        <button class="btn btn-primary btn-del-salary" data-id="{{$s->id}}" data-daily="{{$s->daily_rate}}" 
+                                        data-bi_weekly="{{$s->bi_weekly_rate}}" data-monthly="{{$s->monthly_rate}}" data-note="{{$s->note}}">
+                                            Edit this record</button>
+                                    </td>
+
                                 </tr>
                             @endforeach
                         </tbody>
@@ -149,6 +204,23 @@
     <script>
         $('#modbtn').click(function(){
             $('#add_panel').prop('hidden', false)
+        });
+
+        $('.btn-del-salary').click(function(){
+            $('#update-salary').prop('hidden', false);
+
+            var daily = $(this).attr('data-daily');
+            var bi_weekly = $(this).attr('data-bi_weekly');
+            var monthly = $(this).attr('data-monthly');
+            var note = $(this).attr('data-note');
+            var id = $(this).attr('data-id');
+
+            $('#update_daily').val(daily);
+            $('#update_bi').val(bi_weekly);
+            $('#update_monthly').val(monthly);
+            $('#update_note').val(note);
+            $('#update_id').val(id);
+
         });
     </script>
 @endpush
