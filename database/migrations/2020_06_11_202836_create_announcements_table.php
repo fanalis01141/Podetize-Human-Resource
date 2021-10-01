@@ -19,7 +19,7 @@ class CreateAnnouncementsTable extends Migration
             $table->string('department')->nullable();
             $table->string('position')->nullable();
             $table->string('title');
-            $table->string('content');
+            $table->longText('content');
             $table->timestamps();
         });
     }

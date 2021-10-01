@@ -25,6 +25,8 @@ use App\Announcements;
 use App\Deactivation;
 use App\Document;
 use App\Award;
+use App\Certificate;
+use PDF;
 
 class PivotController extends Controller
 {
@@ -82,8 +84,11 @@ class PivotController extends Controller
 
         $rfi = Award::where('emp_id', $id)->where('type','rfi')->get();
         $commend = Award::where('emp_id', $id)->where('type','commend')->get();
+        $certs = Certificate::where('emp_id', $id)->where('type','GIVEN')->get();
 
-        return view('admin.employee', compact('user','showDep','showPos', 'referrers', 'veem','contact','docu','dis_dep','dis_pos','rfi', 'commend'));
+        // dd($commend);
+
+        return view('admin.employee', compact('user','showDep','showPos', 'referrers', 'veem','contact','docu','dis_dep','dis_pos','rfi', 'commend','certs'));
     }
 
     /**
@@ -251,6 +256,7 @@ class PivotController extends Controller
             User::where('id', \Auth::user()->id)->update([
                 'prof_pic' => $filenametostore,
             ]);
+            
             return redirect()->back()->with('success', 'Your profile picture has been updated');
         }
     }
@@ -589,8 +595,9 @@ class PivotController extends Controller
         $showPos = Department::all();
         $commend_icons = Icon::where('category', 'commendation')->get();
         $rfi_icons = Icon::where('category', 'rfi')->get();
+        $certs = Certificate::where('type','ADMIN')->get();
 
-        return view('admin.awards', compact('users', 'showDep', 'showPos', 'commend_icons','rfi_icons'));
+        return view('admin.awards', compact('users', 'showDep', 'showPos', 'commend_icons','rfi_icons','certs'));
     }
 
     public function employeeAttendance(){
@@ -644,6 +651,20 @@ class PivotController extends Controller
             ->get();
 
         return view('employee.attendance', compact('position','attend_today','leave_today','ots'));
+    }
+
+    public function testPDF(Request $request){
+
+        $certs = Certificate::where('id', $request->certid)->first();
+        // dd($certs);
+        $data = [
+            'name' => $certs->emp_name,
+            'date' => $certs->cert_date_awarded,
+            'title' => $certs->cert_title,
+            ];
+
+            $pdf = PDF::loadView('employee.certs', $data)->setPaper('a4', 'landscape');
+            return $pdf->stream('employee.certs');
     }
 
 }

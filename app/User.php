@@ -18,7 +18,7 @@ class User extends Authenticatable
     protected $fillable = [
         'fname', 'lname', 'password','username','date_hired','emp_status',
         'weeks_of_training','daily_rate','bi_weekly_rate','monthly_rate',
-        'position','department','priority','active','referred_by', 'birth_date','workversary'
+        'position','department','priority','active','referred_by', 'birth_date','workversary','payroll_id'
     ];
 
     /**

@@ -121,6 +121,7 @@
         </div>
 
         <div class="col-md-4">
+
             <div class="card shadow">
                 <h4 class="card-header text-light bg-secondary">
                     <div class="row">
@@ -180,6 +181,51 @@
                             </table>
                         </div>
                     </div>
+                </div>
+            </div> 
+
+            <div class="card shadow mt-3">
+                <h4 class="card-header text-light bg-secondary">
+                    <div class="row">
+                        <div class="col-lg-10"> <i class="fas fa-balance-scale"></i> Certifications</div>
+                        <div class="col-lg-2 text-right"></div>
+                    </div>
+                </h4>
+                <div class="card-body">
+
+                    @if (session('success-icon'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('success-icon') }}
+                    </div>
+                    @endif
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class="text-secondary">
+                                <th scope="col">Certificate</th>
+                                <th scope="col">Logo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($certs as $c)
+                                <tr>
+                                    <td>{{$c->cert_title}}</td>
+                                    <td>SHEESH</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        </table>
+
+                    <hr>
+                    <div class="d-flex justify-content-center">
+                        <form action="{{route('cert.store')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <input type="text" name="name_of_cert" id="" class="form-control" placeholder="Title of Certificate" required>
+                            <input type="file" name="profilePic" id="" class="form-control mt-3" required>
+                            <button type="submit" class="btn btn-success mt-3">Upload Certificate</button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
         </div>

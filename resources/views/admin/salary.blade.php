@@ -27,7 +27,7 @@
     </div>
     <div class="row">
         <div class="col-md-4">
-            <div class="card">
+            <div class="card" id="modify-salary">
                 <div class="card-header bg-primary text-light d-flex justify-content-between">
                     <h5>Current salary</h5>
                     <button class="btn btn-success" id='modbtn'>Modify Salary</button>
@@ -111,8 +111,8 @@
                         @csrf
                         <div class="row text-center">
                             <div class="col-md-12">
-                                <input type="text" class="form-control mt-3" name="update_id" id="update_id" placeholder="Enter updated daily rate">
-                                <input type="text" class="form-control mt-3" name="emp_id" id="emp_id" value="{{$user->id}}">
+                                <input type="text" class="form-control mt-3" name="update_id" id="update_id" hidden>
+                                <input type="text" class="form-control mt-3" name="emp_id" id="emp_id" value="{{$user->id}}" hidden>
 <hr>
 
                                 <input type="text" class="form-control mt-3" name="update_daily" id="update_daily" placeholder="Enter updated daily rate">
@@ -208,6 +208,8 @@
 
         $('.btn-del-salary').click(function(){
             $('#update-salary').prop('hidden', false);
+            $('#modify-salary').prop('hidden', true);
+
 
             var daily = $(this).attr('data-daily');
             var bi_weekly = $(this).attr('data-bi_weekly');

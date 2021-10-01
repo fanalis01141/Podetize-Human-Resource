@@ -5,8 +5,6 @@ namespace Illuminate\Foundation\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use App\User;
-
 
 trait AuthenticatesUsers
 {
@@ -121,11 +119,7 @@ trait AuthenticatesUsers
      */
     protected function authenticated(Request $request, $user)
     {
-        if(Auth::user()->priority == 'HI'){
-            return redirect()->route('homedashboard');
-        }else{
-            return redirect()->route('home');
-        }
+        //
     }
 
     /**

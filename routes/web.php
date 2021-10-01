@@ -52,10 +52,10 @@ Route::post('/get-all-off', 'AttendanceController@getAllOff')->name('attendance.
 Route::post('/get-all-ot', 'AttendanceController@getAllOt')->name('attendance.getallot');
 Route::post('/parse-date-for-display', 'AttendanceController@parseDateForDisplay')->name('attendance.parseDateForDisplay');
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 Route::group(['middleware' => ['auth' , 'admin']], function () {
-
+    Route::resource('cert', 'CertificateController');
     Route::resource('contact', 'ContactController');
     Route::resource('veem', 'VeemController');
     Route::resource('employee', 'PivotController');
@@ -126,10 +126,18 @@ Route::group(['middleware' => ['auth' , 'admin']], function () {
     Route::get('/awards-and-rfi', 'PivotController@awardsAndRfi')->name('zz');
     Route::get('/awards-rfi', 'AwardController@showrfi');
     Route::post('/update-salary-record','SalaryController@updateSalary')->name('salary.updateSalary');
+
+
+
     
     Route::post('users/create-new', function (Request $request) {
+    
+        // dd(Hash::make($request->password));
 
-
+        $payroll_id = User::latest()->first();
+        // $new_payroll_id = $payroll_id->payroll_id + 1;
+        // dd($new_payroll_id);
+        // dd($payroll_id);
         $request->validate([
             // 'username' => 'required|unique:users',
             'username' => 'required',
@@ -159,6 +167,7 @@ Route::group(['middleware' => ['auth' , 'admin']], function () {
             'daily_rate' => $request->daily_rate,
             'bi_weekly_rate' => $request->bi_weekly_rate,
             'monthly_rate' => $request->monthly_rate,
+            'payroll_id' => $payroll_id->payroll_id + 1
         ]);
 
         Veem::create([
@@ -214,6 +223,8 @@ Route::group(['middleware' => ['auth' , 'admin']], function () {
 
 
 Route::group(['middleware' => ['auth', 'user']], function () {
+    
+    Route::post('/employee/pdf', 'PivotController@testpdf')->name('test.pdf');
 
     Route::post('/employee/attendance', 'PivotController@employeeAttendance')->name('employee.attendance');
     Route::post('/user-update', 'PivotController@selfUpdate')->name('selfUpdate');

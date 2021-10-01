@@ -150,7 +150,7 @@
                             </div>
                             <div class="col-md-4 mt-2">
                                 <label for="password">Password</label>
-                                <input type="password" name="password" id="password" class="form-control new-employee-input" required value="{{old('password')}}"><span></span>
+                                <input type="text" name="password" id="password" class="form-control new-employee-input" required value="{{old('password')}}"><span></span>
                                 <a class="btn btn-success" style="color:white" id='generate_pass'>Generate password</a>
                             </div>
                             <div class="col-md-4 mt-2">

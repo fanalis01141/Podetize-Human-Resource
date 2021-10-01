@@ -4,7 +4,13 @@
 @section('content')
 {{-- user view --}}
     <div class="container">
+        <form action="{{route('test.pdf')}}" method="POST">
+            @csrf
+            <button class="btn btn-success text-light" type="submit">SEE PDF</button>
+        </form>
 
+
+        {{-- Announcements Section --}}
         <div class="row">
             <div class="col-md-12">
                 <div class="text-right mb-3 d-flex justify-content-between">
@@ -122,7 +128,9 @@
                 </div>
             </div>
         </div>
+        {{-- End Announcements Section --}}
 
+        {{-- CMD & RFI --}}
         <div class="row mt-3">
             <div class="col-md-6">
                 <div class="card shadow">
@@ -136,7 +144,7 @@
                         @else
                             @foreach ($commend as $c)
                                 <i class="{{$c->icon}} fa-2x cmd-icon rmv-icon" style="color: #004FBE"
-                                    data-title="{{$c->award_title}}"  data-content="{{$c->award_content}}"></i>
+                                    data-title="{{$c->award_title}}"  data-content="{{$c->award_content}}" data-date="{{ date('F j, Y', strtotime($c->created_at)) }}"></i>
                             @endforeach
                         @endif
                     </div>
@@ -150,6 +158,39 @@
 
             <div class="col-md-6">
                 <div class="card shadow">
+                    <div class="card-header bg-primary text-light"><h4>Certificates Given</h4></div>
+                    <div class="card-body">
+                        @if ($certs->isEmpty())
+                            <div class="text-center">
+                                <h6>No certificates for this employee. </h6>
+                                
+                            </div>
+                        @else
+                            Click award to see certificate
+                            <br>
+                            <div class="d-flex justify-content-start">
+
+                                @foreach ($certs as $c)
+                                    <form action="{{route('test.pdf')}}" method="POST">
+                                        @csrf
+                                        <input type="text" name="certid" id="certid" value="{{$c->id}}" hidden>
+                                        <button class="btn btn-outline-success mr-2" type="submit">{{$c->cert_title}}
+                                        </button>
+                                    </form>
+                                @endforeach
+                            </div>
+                        @endif
+                            
+                    </div>
+                    <hr>
+                    <div class="text-center">
+                        <small>Hover over the icon to know what rfi you got!</small>
+                    </div>
+                </div>
+            </div>
+
+            {{-- <div class="col-md-6">
+                <div class="card shadow">
                     <div class="card-header bg-primary text-light"><h5>Room for Improvement</h5></div>
                     <div class="card-body">
                         @if ($rfi->isEmpty())
@@ -160,7 +201,7 @@
                         @else
                             @foreach ($rfi as $c)
                                 <i class="{{$c->icon}} fa-2x rfi-icon rmv-icon" style="color: #e01818; margin-left: 20px;" 
-                                    data-title="{{$c->award_title}}"  data-content="{{$c->award_content}}"></i>
+                                    data-title="{{$c->award_title}}"  data-content="{{$c->award_content}}" data-date="{{ date('F j, Y', strtotime($c->created_at)) }}"></i>
                             @endforeach
                         @endif
                     </div>
@@ -169,8 +210,9 @@
                         <small>Hover over the icon to know what rfi you got!</small>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
+        {{-- End CMD & RFI --}}
 
         <div class="row mt-3">
             <div class="col-lg-12">
@@ -391,8 +433,14 @@
             <div class="col-md-6">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-light d-flex justify-content-between">
+
+                            
                         <h5><i class="far fa-clock" style="color:darkseagreen"></i>&nbsp;Overtime Record</h5>
-                        <button data-toggle="modal" data-target="#overtime_request" class="btn btn-secondary btn-sm">Apply Overtime</button>
+
+                        @if ($eligible == true)
+                            <button data-toggle="modal" data-target="#overtime_request" class="btn btn-secondary btn-sm">Apply Overtime</button>
+                        @endif
+
                     </div>
                     <div class="card-body">
                         <table class="table table-hover table-bordered">
@@ -563,6 +611,14 @@
                 <form action="{{route('overtime.store')}}" method="POST">
                     @csrf
                     <div class="modal-body">
+                        <label for="">Select a team member from your department</label>
+                        <select name="member_id" id="member_id" class="form-control">
+                            @foreach ($team_members as $t)
+                                <option value="{{$t->id}}">{{$t->fname . ' ' . $t->lname}}</option>
+                            @endforeach
+                        </select>
+                        <br>
+
                         <label for="">Task or Episode</label>
                         <input type="text" class="form-control mb-2" required name='task_or_eps'>
 
@@ -767,26 +823,30 @@
         $(".rfi-icon").hover(function(){
             var title = $(this).attr('data-title');
             var content = $(this).attr('data-content');
+            var date = $(this).attr('data-date');
 
 
             Swal.fire({
-                icon: 'error',
+                // icon: 'error',
+                // title: title,
+                // text: content
                 title: title,
-                text: content
+                html: content + '<hr>' + 'Given on: ' + date,
+                icon: 'error',
             });
         });
 
         $(".cmd-icon").hover(function(){
             var title = $(this).attr('data-title');
             var content = $(this).attr('data-content');
-
-
+            var date = $(this).attr('data-date');
             Swal.fire({
-                icon: 'success',
                 title: title,
-                text: content
+                html: content + '<hr>' + 'Given on: ' + date,
+                icon: 'success',
             });
         });
+
 
     </script>
 @endpush

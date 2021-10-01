@@ -54,7 +54,7 @@
                         @else
                             @foreach ($commend as $c)
                                 <i class="{{$c->icon}} fa-2x cmd-icon rmv-icon" style="color: #004FBE"
-                                    data-title="{{$c->award_title}}"  data-content="{{$c->award_content}}"></i>
+                                data-title="{{$c->award_title}}"  data-content="{{$c->award_content}}" data-date="{{ date('F j, Y', strtotime($c->created_at)) }}"></i>
                             @endforeach
                         @endif
                     </div>
@@ -68,17 +68,18 @@
 
             <div class="col-md-6">
                 <div class="card shadow">
-                    <div class="card-header bg-primary text-light"><h4>Room for Improvement</h4></div>
+                    <div class="card-header bg-primary text-light"><h4>Certificates Given</h4></div>
                     <div class="card-body">
-                        @if ($rfi->isEmpty())
+                        @if ($certs->isEmpty())
                             <div class="text-center">
-                                <h6>No RFI for this employee. </h6>
+                                <h6>No certificates for this employee. </h6>
                                 
                             </div>
                         @else
-                            @foreach ($rfi as $c)
-                                <i class="{{$c->icon}} fa-2x rfi-icon rmv-icon" style="color: #e01818; margin-left: 20px;" 
-                                    data-title="{{$c->award_title}}"  data-content="{{$c->award_content}}"></i>
+                            Click award to see certificate
+                            <br>
+                            @foreach ($certs as $c)
+                            <a href="">{{$c->cert_title}}</a>
                             @endforeach
                         @endif
                             
@@ -89,6 +90,31 @@
                     </div>
                 </div>
             </div>
+
+            {{-- <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-light"><h4>Room for Improvement</h4></div>
+                    <div class="card-body">
+                        @if ($rfi->isEmpty())
+                            <div class="text-center">
+                                <h6>No RFI for this employee. </h6>
+                                
+                            </div>
+                        @else
+                            @foreach ($rfi as $c)
+                                <i class="{{$c->icon}} fa-2x rfi-icon rmv-icon" style="color: #e01818; margin-left: 20px;" 
+                                    data-title="{{$c->award_title}}"  data-content="{{$c->award_content}}" data-date="{{ date('F j, Y', strtotime($c->created_at)) }}"></i>
+
+                            @endforeach
+                        @endif
+                            
+                    </div>
+                    <hr>
+                    <div class="text-center">
+                        <small>Hover over the icon to know what rfi you got!</small>
+                    </div>
+                </div>
+            </div> --}}
         </div>
 
         <div class="row mt-3">
@@ -507,11 +533,11 @@
             var title = $(this).attr('data-title');
             var content = $(this).attr('data-content');
 
-
             Swal.fire({
                 icon: 'error',
                 title: title,
-                text: content
+                html: content + '<hr>' + 'ASDASDASDAD'
+                // text: content
             });
         });
 
@@ -519,10 +545,12 @@
             var title = $(this).attr('data-title');
             var content = $(this).attr('data-content');
             var empid = "{{ $user->id }}";
+            var date = $(this).attr('data-date');
 
             Swal.fire({
                 title: title,
-                text: content,
+                // text: content,
+                html: content + '<hr>' + 'Given on: ' + date,
                 icon: 'info',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

@@ -16,12 +16,15 @@ use App\Icon;
 use App\Award;
 use DateTime;
 use App\Salary;
+use App\Certificate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+
 
 
 class HomeController extends Controller
@@ -131,13 +134,28 @@ class HomeController extends Controller
         $rfi = Award::where('emp_id', Auth::user()->id)->where('type','rfi')->get();
         $commend = Award::where('emp_id', Auth::user()->id)->where('type','commend')->get();
         $salary = Salary::where('emp_id', Auth::user()->id)->orderBy('created_at','desc')->get();
-
-
-
-        $ot = Overtime::where('emp_id', Auth::user()->id)->paginate(5);
         $docu = Document::where('emp_id', Auth::user()->id)->first();
+        $ot = Overtime::where('emp_id', Auth::user()->id)->orderBy('id','desc')->paginate(5);
+        $certs = Certificate::where('emp_id', Auth::user()->id)->where('type','GIVEN')->get();
+
+
+
+        // Get all users based on department
+        if (Auth::user()->department == 'Management'){
+            $team_members = User::where('active', 1)->orderBy('fname','asc')->get();
+        }else{
+            $team_members = User::where('department', Auth::user()->department)->where('active', 1)->get();
+        }
+
+        // Check if account is eligible for OT
+        $eligible = Str::contains(Auth::user()->position, ['Lead', 'Production Manager', 'Corporate Websites Manager']);
+
+
+
+
         return view('home', compact('ann', 'ot', 'ann1','ann2', 'ann3','all_ann','all_pvt','all_dept','all_pos',
-                                     'upcoming_b', 'upcoming_w', 'remaining_sick','remaining_vac', 'diffYears','leave','docu','commend','rfi','salary'));
+                                     'upcoming_b', 'upcoming_w', 'remaining_sick','remaining_vac', 'diffYears',
+                                     'leave','docu','commend','rfi','salary','eligible','team_members','certs'));
     }
 
     public function attendtoday()
@@ -272,9 +290,10 @@ class HomeController extends Controller
         $holidays = holiday::all();
         $commend_icons = Icon::where('category', 'commendation')->get();
         $rfi_icons = Icon::where('category', 'rfi')->get();
+        $certs = Certificate::where('type','ADMIN')->get();
 
 
-        return view('admin.settings', compact('department', 'position' , 'holidays', 'commend_icons','rfi_icons'));
+        return view('admin.settings', compact('department', 'position' , 'holidays', 'commend_icons','rfi_icons','certs'));
     }
 
     public function newHoliday(Request $request)

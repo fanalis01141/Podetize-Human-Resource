@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Overtime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\User;
 
 
 class OvertimeController extends Controller
@@ -22,6 +23,7 @@ class OvertimeController extends Controller
                         ->select('users.*', 'overtimes.*')
                         ->where('users.active','1')
                         ->where('overtimes.status','PENDING')
+                        ->orderBy('overtimes.id','desc')
                         ->paginate(50);
         return view('admin.overtime', compact('users'));
     }
@@ -44,8 +46,11 @@ class OvertimeController extends Controller
      */
     public function store(Request $request)
     {
+        // return ($request);
+        $user_info = User::find($request->member_id);
+        // return $user_info;
         $user = Overtime::where('status','PENDING')->where([
-            'emp_id'=> \Auth::user()->id,
+            'emp_id'=> $request->member_id,
             'date' => $request->date_of_ot
         ])->first();
 
@@ -53,10 +58,10 @@ class OvertimeController extends Controller
             return redirect()->back()->withErrors('Overtime request existing for date: ' . date("F jS, Y", strtotime($request->date_of_ot)));
         }else{
             Overtime::create([
-                'emp_id' => \Auth::user()->id,
+                'emp_id' => $request->member_id,
                 'task_or_eps' => $request->task_or_eps,
-                'department' => \Auth::user()->department,
-                'complete_name' => \Auth::user()->fname . ' ' . \Auth::user()->lname,
+                'department' => $user_info->department,
+                'complete_name' => $user_info->fname . ' ' . $user_info->lname,
                 'date' => $request->date_of_ot,
                 'hours' => $request->hours,
                 'for_approval' => $request->for_approval,

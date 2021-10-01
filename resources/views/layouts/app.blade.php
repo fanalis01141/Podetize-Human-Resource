@@ -17,31 +17,31 @@
     {{-- <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet"> --}}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('css/jquery.timepicker.min.css')}}">
-
-
+    
+    
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
-
+    
     <style>
-    .bodyPodetize{
-        background: rgba(203,203,210,.15) !important;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .bg-nav-grey{
-        background-color: #3490dc !important;
-        display: none !important;
-    }
-
-    .deduct{
-        border: 1px solid red;
-    }
-
-    .inc{
-        border: 1px solid green;
-    }
-    </style>
+        .bodyPodetize{
+            background: rgba(203,203,210,.15) !important;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .bg-nav-grey{
+            background-color: #3490dc !important;
+            display: none !important;
+        }
+        
+        .deduct{
+            border: 1px solid red;
+        }
+        
+        .inc{
+            border: 1px solid green;
+        }
+        </style>
 
 </head>
 <body class="bodyPodetize">
@@ -195,8 +195,12 @@
     </div>
 
     <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{asset('js/jquery.timepicker.min.js')}}"></script>
+    <script src="{{ asset('js/jquery.timepicker.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    {{-- <script src="{{ asset('js/html2canvas.js') }}"></script> 
+    <script src="{{ asset('js/html2canvas.min.js') }}"></script>  --}}
+
+
 
 </body>
 @stack('scripts')
